@@ -6,7 +6,7 @@ const cTable = require('console.table');
 //mysql connection
 const connection = mysql.createConnection({
     host: 'localhost',
-    port: 8080,
+    port: 3306,
     user: 'root',
     password: 'password',
     database: 'employeeTracker_DB'
@@ -219,7 +219,7 @@ const updEmpRole = async () => {
 
 //Deletes an employee
 const delEmployee = () => {
-    connection.query('SELECT CONCATENATION(first_name, " ", last_name, " - Employee ID: ", id) AS fullName FROM employee', (err, res) => {
+    connection.query('SELECT CONCAT(first_name, " ", last_name, " - Employee ID: ", id) AS fullName FROM employee', (err, res) => {
         if (err) throw err;
         inquirer
             .prompt([
@@ -259,7 +259,7 @@ const delEmployee = () => {
 
 //Adds a role
 const addRole = () => {
-    connection.query('SELECT CONCATENATION(id, " - ", department_name) AS fullDept FROM department', (err, res) => {
+    connection.query('SELECT CONCAT(id, " - ", department_name) AS fullDept FROM department', (err, res) => {
         if (err) throw err;
         inquirer
             .prompt([
@@ -308,7 +308,7 @@ const addRole = () => {
 
 //Deletes a role
 const delRole = () => {
-    connection.query('SELECT CONCATENATION(id, " - ", title) AS fullRole FROM role', (err, res) => {
+    connection.query('SELECT CONCAT(id, " - ", title) AS fullRole FROM role', (err, res) => {
         if (err) throw err;
         inquirer
             .prompt([
@@ -369,7 +369,7 @@ const addDept = () => {
 
 //Deletes a department
 const delDep = () => {
-    connection.query('SELECT CONCATENATION(id, " - ", department_name) AS fullDept FROM department', (err, res) => {
+    connection.query('SELECT CONCAT(id, " - ", department_name) AS fullDept FROM department', (err, res) => {
         if (err) throw err;
         inquirer
             .prompt([
@@ -406,7 +406,7 @@ const delDep = () => {
 
 const getEmpQuery = () => {
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT CONCATENATION("ID: ", employee.id, " - ", first_name, " ", last_name, " - ", role.title) 
+        connection.query(`SELECT CONCAT("ID: ", employee.id, " - ", first_name, " ", last_name, " - ", role.title) 
         AS fullName FROM role RIGHT JOIN employee ON role.id = employee.role_id`,
             (err, res) => {
                 if (err) reject(err);
@@ -422,9 +422,10 @@ const getEmpQuery = () => {
 
 const getRoleQuery = () => {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT CONCATENATION("Role ID: ", id, " - ", title) AS fullRole FROM role', (err, res) => {
+        connection.query('SELECT CONCAT("Role ID: ", id, " - ", title) AS fullRole FROM role', (err, res) => {
             if (err) reject(err);
             let rolArr = [];
+            console.log(res)
             res.forEach(role => {
                 rolArr.push(role.fullRole);
             })
@@ -435,7 +436,7 @@ const getRoleQuery = () => {
 
 const getManagerQuery = () => {
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT CONCATENATION("Emp_ID: ", id, " - ", first_name, " ", last_name) AS Managers FROM employee WHERE role_id BETWEEN 1 AND 2`, (err, res) => {
+        connection.query(`SELECT CONCAT("Emp_ID: ", id, " - ", first_name, " ", last_name) AS Managers FROM employee WHERE role_id BETWEEN 1 AND 2`, (err, res) => {
             if (err) reject(err);
 
             let managerArr = ["No_Manager"];
