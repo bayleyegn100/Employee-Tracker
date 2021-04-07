@@ -1,4 +1,4 @@
-
+// Imported 
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const cTable = require('console.table');
@@ -34,35 +34,35 @@ const init = () => {
         }).then((answer) => {
             switch (answer.action) {
                 case 'View All Employees':
-                    viewAllEmp();
+                    viewAllEmployee();
                     break;
                 case 'View All Departments':
-                    viewAllDepts();
+                    viewAllDepartments();
                     break;
                 case 'View All Roles':
                     viewAllRoles();
                     break;
                 case 'Add Employee':
-                    addEmp();
+                    addEmployee();
                     break;
                 case 'Add Role':
                     addRole();
                     break;
                 case 'Add Department':
-                    addDept();
+                    addDepartment();
                     break;
                 case 'Update Employee Role':
-                    updEmpRole();
+                    updateEmployeeRole();
                     break;
                 case 'Remove Employee':
-                    delEmployee();
+                    deleteEmployee();
                     break;
 
                 case 'Remove Role':
-                    delRole();
+                    deleteRole();
                     break;
                 case 'Remove Department':
-                    delDep();
+                    deleteDepartment();
                     break;
                 case 'Exit':
                     connection.end();
@@ -72,7 +72,7 @@ const init = () => {
 };
 
 //View employees
-const viewAllEmp = () => {
+const viewAllEmployee = () => {
     connection.query(
         `SELECT 
         employee.id AS ID, 
@@ -92,7 +92,7 @@ const viewAllEmp = () => {
 };
 
 //View departments
-const viewAllDepts = () => {
+const viewAllDepartments = () => {
     connection.query('SELECT id AS ID, department_name AS Department FROM department', (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -120,7 +120,7 @@ const viewAllRoles = () => {
 };
 
 //Add employee
-const addEmp = async () => {
+const addEmployee = async () => {
     let getRole = await getRoleQuery();
     let getManager = await getManagerQuery();
 
@@ -171,21 +171,21 @@ const addEmp = async () => {
 };
 
 //Updates employee role
-const updEmpRole = async () => {
+const updateEmployeeRole = async () => {
     let empQuery = await getEmpQuery();
     let rolQuery = await getRoleQuery();
 
     inquirer
         .prompt([
             {
-                name: 'employee',
-                type: 'rawlist',
+                name: 'roleToUpdate',
+                type: 'list',
                 choices: empQuery,
                 message: 'Employee role to be updated?',
             },
             {
-                name: 'role',
-                type: 'rawlist',
+                name: 'roleToAdd',
+                type: 'list',
                 choices: rolQuery,
                 message: 'New role for the employee.',
             }
@@ -218,13 +218,13 @@ const updEmpRole = async () => {
 };
 
 //Deletes an employee
-const delEmployee = () => {
+const deleteEmployee = () => {
     connection.query('SELECT CONCAT(first_name, " ", last_name, " - Employee ID: ", id) AS fullName FROM employee', (err, res) => {
         if (err) throw err;
         inquirer
             .prompt([
                 {
-                    name: 'delEmployee',
+                    name: 'deleteEmployee',
                     type: 'rawlist',
                     choices() {
                         const choiceArray = [];
@@ -237,7 +237,7 @@ const delEmployee = () => {
                 },
             ])
             .then((answer) => {
-                nameArray = answer.delEmployee.split(" ")
+                nameArray = answer.deleteEmployee.split(" ")
                 console.log('Deleting employee...\n');
                 connection.query(
                     'DELETE FROM employee WHERE ?',
@@ -307,7 +307,7 @@ const addRole = () => {
 };
 
 //Deletes a role
-const delRole = () => {
+const deleteRole = () => {
     connection.query('SELECT CONCAT(id, " - ", title) AS fullRole FROM role', (err, res) => {
         if (err) throw err;
         inquirer
@@ -342,7 +342,7 @@ const delRole = () => {
 };
 
 //Adds a department
-const addDept = () => {
+const addDepartment = () => {
     inquirer
         .prompt([
             {
@@ -368,7 +368,7 @@ const addDept = () => {
 };
 
 //Deletes a department
-const delDep = () => {
+const deleteDepartment = () => {
     connection.query('SELECT CONCAT(id, " - ", department_name) AS fullDept FROM department', (err, res) => {
         if (err) throw err;
         inquirer

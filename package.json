@@ -1,7 +1,7 @@
 {
-  "name": "Employee-Tracker",
+  "name": "employee-tracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "used to track employees, thier role, dept, and others",
   "main": "index.js",
   "dependencies": {
     "console.table": "^0.10.0",
@@ -18,7 +18,7 @@
     "url": "git+https://github.com/bayleyegn100/Employee-Tracker.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Debasu B Eyasu",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bayleyegn100/Employee-Tracker/issues"
