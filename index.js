@@ -45,21 +45,20 @@ const init = () => {
                 case 'Add Employee':
                     addEmployee();
                     break;
-                case 'Add Role':
-                    addRole();
-                    break;
-                case 'Add Department':
-                    addDepartment();
-                    break;
                 case 'Update Employee Role':
                     updateEmployeeRole();
                     break;
                 case 'Remove Employee':
                     deleteEmployee();
                     break;
-
+                case 'Add Role':
+                    addRole();
+                    break;
                 case 'Remove Role':
                     deleteRole();
+                    break;
+                case 'Add Department':
+                    addDepartment();
                     break;
                 case 'Remove Department':
                     deleteDepartment();
@@ -174,7 +173,8 @@ const addEmployee = async () => {
 const updateEmployeeRole = async () => {
     let empQuery = await getEmpQuery();
     let rolQuery = await getRoleQuery();
-
+    console.log({ empQuery })
+    console.log({ rolQuery })
     inquirer
         .prompt([
             {
@@ -191,7 +191,7 @@ const updateEmployeeRole = async () => {
             }
         ])
         .then((answer) => {
-            nameArray = answer.empToUpdate.split(" ")
+            nameArray = answer.roleToUpdate.split(" ")
             roleArray = answer.roleToAdd.split(" ")
 
             console.log('Updating employee role...\n');
@@ -407,12 +407,15 @@ const deleteDepartment = () => {
 const getEmpQuery = () => {
     return new Promise((resolve, reject) => {
         connection.query(`SELECT CONCAT("ID: ", employee.id, " - ", first_name, " ", last_name, " - ", role.title) 
-        AS fullName FROM role RIGHT JOIN employee ON role.id = employee.role_id`,
+        AS fullName FROM employee RIGHT JOIN role ON employee.role_id = role.id`,
             (err, res) => {
                 if (err) reject(err);
                 let empArr = [];
+                console.log(res);
                 res.forEach(employee => {
-                    empArr.push(employee.fullName);
+                    if (employee && employee.fullName) {
+                        empArr.push(employee.fullName);
+                    }
                 })
                 resolve(empArr)
             });
@@ -425,7 +428,7 @@ const getRoleQuery = () => {
         connection.query('SELECT CONCAT("Role ID: ", id, " - ", title) AS fullRole FROM role', (err, res) => {
             if (err) reject(err);
             let rolArr = [];
-            console.log(res)
+            // console.log(res)
             res.forEach(role => {
                 rolArr.push(role.fullRole);
             })
